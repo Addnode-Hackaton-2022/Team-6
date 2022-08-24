@@ -32,17 +32,20 @@ return i.signalId = t,
                 }
             }
 
+----------------------------------------------------------------------------------------
+
+Example WS pull (fuellevel):
+{"data":[1,5,3,135,20,0,0,0,0,0,0,0],"messagecmd":64,"messagetype":32,"size":12}
+var fuelPercentage = (data[3] | data[4] << 8) / 50;
 
 
-
-
-Increase (read? write) alarm (incrementally)
-{"data":[2,0,0],"messagecmd":1,"messagetype":16,"size":3}
+Increase (set/get) alarm (incrementally)
 {"data":[2,0,1],"messagecmd":1,"messagetype":16,"size":3}
+{"data":[2,0,0],"messagecmd":1,"messagetype":16,"size":3}
 
 Decrease alarm, incrementally
-{"data":[3,0,0],"messagecmd":1,"messagetype":16,"size":3}
 {"data":[3,0,1],"messagecmd":1,"messagetype":16,"size":3}
+{"data":[3,0,0],"messagecmd":1,"messagetype":16,"size":3}
 
 
 Set specific alarm
@@ -51,8 +54,7 @@ Set specific alarm
 (Rounds down to nearest 10 whatever is sent and sends back the rounded value to every client. \
 I.e. set to 66 -> 60 is set)
 
-----------------------------------------------------------------------------------------
 
-Example WS pull (fuellevel):
-{"data":[1,5,3,135,20,0,0,0,0,0,0,0],"messagecmd":64,"messagetype":32,"size":12}
-var fuelPercentage = (data[3] | data[4] << 8) / 50;
+Reset alarm:
+{"messagetype":17,"messagecmd":1,"size":3,"data":[6,0,1]}
+{"messagetype":17,"messagecmd":1,"size":3,"data":[6,0,0]}
