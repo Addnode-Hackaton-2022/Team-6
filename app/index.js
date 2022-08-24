@@ -9,7 +9,7 @@ app.use(express.json());
 
 const fs = require('fs');
 
-const requestUrl = '172.16.67.71';
+const requestUrl = '172.16.67.71:3000';
 const vehicleId = 1;
 
 var fuelLevel;
@@ -19,6 +19,7 @@ var alarm;
 // Behövs eftersom vi inte alltid får rätt data för threshold
 var requestedWduInfo = false;
 
+//log doesn't work correctly as it overwrites file on each log
 function log(msg) {
   var d = new Date(),
       content = d.toLocaleTimeString() + ' ' + msg;
@@ -56,7 +57,7 @@ function requestWduInfo() {
 var connect = function() {
     ws = new WebSocket('ws://172.16.55.42/ws');
     ws.on('open', function() {
-        log('socket open');
+        //log('socket open');
         fetch("http://172.16.67.67:3001/addvehicle",
         {
             headers: {
@@ -71,11 +72,12 @@ var connect = function() {
     });
 
     ws.on('error', function() {
-        log('error');
+        //log('error');
     });
 
     ws.on('close', function() {
-        log('socket close, reconnecting');
+        //log('socket close, reconnecting');
+        console.log('socket close, reconnecting...');
         setTimeout(connect, 100);
     });
     
