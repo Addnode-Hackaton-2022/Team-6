@@ -60,6 +60,30 @@ Reset alarm:
 {"messagetype":17,"messagecmd":1,"size":3,"data":[6,0,0]}
 
 
+----------------------------------------------------------------------------------------
+
+
+Request wdu data:
+{"messagetype":49,"messagecmd":1,"size":3,"data":[0,0,0]}
+
+
+static requestWduInfoCommand() {
+                return {
+                    messagetype: 49,
+                    messagecmd: 1,
+                    size: 3,
+                    data: [0, 0, 0]
+                }
+            }
+
+
+sends, among other things (current alarm level): 
+{"data":[5,0,0,0,48,242,0,0],"messagecmd":5,"messagetype":16,"size":8}
+
+(data[4] | data[5] << 8) / 1000
+(in above example, (48 | 242 << 8)/1000 == 62)
+(also sent on increment for alarm level)
+
 
 
 ----------------------------------------------------------------------------------------
