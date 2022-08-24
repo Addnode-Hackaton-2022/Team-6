@@ -6,11 +6,6 @@ app.use(express.json());
 
 const vehicles = [
   {
-    requestUrl: "http://localhost:3000",
-    name: "Vehicle1",
-    position: "59.395892, 17.958529",
-  },
-  {
     requestUrl: "http://172.16.67.71",
     name: "Vehicle2",
     position: "59.395892, 17.958529",
@@ -37,7 +32,6 @@ app.get("/vehicles", (req, res) => {
 });
 
 app.post("/addvehicle", (req, res) => {
-  vehicles = vehicles.filter((v) => v.requestUrl !== req.body.requestUrl);
   vehicles.push(req.body);
   res.send(req.body);
 });
