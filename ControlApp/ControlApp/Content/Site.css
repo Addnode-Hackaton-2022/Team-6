@@ -24,3 +24,17 @@ textarea {
 }
 
 #map { height:400px; width:600px; float:left}
+
+/*.svg-icon.alarm, #alarm {
+    height: 50px;
+    width: 50px;
+    filter: invert(42%) sepia(92%) hue-rotate(45deg) saturate(1352%);
+    mask-image: url("~/Content/Icons/bell-ring.svg");
+}
+*/
+.alarmRed {
+    filter: invert(19%) sepia(50%) saturate(7462%) hue-rotate(355deg) brightness(106%) contrast(131%);
+}
+.alarmGreen {
+    filter: invert(67%) sepia(48%) saturate(5848%) hue-rotate(82deg) brightness(117%) contrast(125%);
+}
