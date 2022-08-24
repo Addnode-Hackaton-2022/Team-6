@@ -40,12 +40,12 @@ var fuelPercentage = (data[3] | data[4] << 8) / 50;
 
 
 Increase (set/get) alarm (incrementally)
-{"data":[2,0,1],"messagecmd":1,"messagetype":16,"size":3}
-{"data":[2,0,0],"messagecmd":1,"messagetype":16,"size":3}
+{"data":[2,0,1],"messagecmd":1,"messagetype":17,"size":3}
+{"data":[2,0,0],"messagecmd":1,"messagetype":17,"size":3}
 
 Decrease alarm, incrementally
-{"data":[3,0,1],"messagecmd":1,"messagetype":16,"size":3}
-{"data":[3,0,0],"messagecmd":1,"messagetype":16,"size":3}
+{"data":[3,0,1],"messagecmd":1,"messagetype":17,"size":3}
+{"data":[3,0,0],"messagecmd":1,"messagetype":17,"size":3}
 
 
 Set specific alarm
@@ -58,3 +58,56 @@ I.e. set to 66 -> 60 is set)
 Reset alarm:
 {"messagetype":17,"messagecmd":1,"size":3,"data":[6,0,1]}
 {"messagetype":17,"messagecmd":1,"size":3,"data":[6,0,0]}
+
+
+
+
+----------------------------------------------------------------------------------------
+
+
+
+class I {
+            static receivedWduHeartbetAckCommand() {
+                return {
+                    messagetype: l.acknowledgement,
+                    messagecmd: c.acknowledgementAck,
+                    size: 1,
+                    data: [0]
+                }
+            }
+            static requestWduInfoCommand() {
+                return {
+                    messagetype: 49,
+                    messagecmd: 1,
+                    size: 3,
+                    data: [0, 0, 0]
+                }
+            }
+            static momentaryCommand(e, t) {
+                return {
+                    messagetype: 17,
+                    messagecmd: 1,
+                    size: 3,
+                    data: [e, e >> 8, t ? 1 : 0]
+                }
+            }
+            static toggleCommand(e, t, i, s) {
+                let n = 0;
+                return t && (n |= 1),
+                i && (n |= 2),
+                s && (n |= 4),
+                {
+                    messagetype: 17,
+                    messagecmd: 0,
+                    size: 3,
+                    data: [e, e >> 8, n]
+                }
+            }
+            static dimmerCommand(e, t, i) {
+                return {
+                    messagetype: 17,
+                    messagecmd: 3,
+                    size: 5,
+                    data: [e, e >> 8, i, 255 & t, t >> 8 & 255]
+                }
+            }
