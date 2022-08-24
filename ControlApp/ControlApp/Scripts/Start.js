@@ -17,9 +17,10 @@ function createVehicleMarker(data) {
         color: color,
         fillColor: '#f03',
         fillOpacity: 0.5,
-        radius: 20
+        radius: 100
     }).addTo(map).on('click', onVehicleClick);
     vehicle.fuelLevel = data.fuelLevel;
+    vehicle.alarm = data.alarm;
 }
 vehicles = [
     { id:1, pos: { lat: 59.3294, lon: 18.9520 }, fuelLevel: 100, alarm: false },
@@ -33,13 +34,16 @@ function onVehicleClick(e) {
   //  setSelectedVehicle(this.id);
     var label = document.getElementById('tankLevelLabel')
     label.innerHTML = this.fuelLevel;
+    var className = this.alarm ? 'alarmRed' : 'alarmGreen';
+    var alarm = document.getElementById('alarm');
+    alarm.className = className;
 }
 function getTankLevel() {
     $.ajax({
         url: "https://localhost:44319/api/MainApi/GetTankLevel",
         type: "GET",
         success: function (result) {
-            var label = document.getElementById('tankLevelLabel')
+            var label = document.getElementById('tankLevelLabel');
             label.innerHTML = result;
         }
     });
