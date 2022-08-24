@@ -11,6 +11,11 @@ Ett tips till teamet är att gå varvet runt och låta alla presentera sig, ni k
 * Vilka tekniker jobbar du mest med idag?
 * Är det något under dessa dagar som du redan nu vet att du skulle vilja undersöka mera?
 
+# För att klona repo
+Github har tagit bort stödet för användarnamn och lösenord över HTTPS så ni behöver skapa ett PersonalAccessToken(PAT).
+Gå in under Settings i rullisten uppe i högra hörnet på eran profil. Längst ner i Settings listan finns Developer Settings, klicka på den. Klicka sedan på Personal acces tokens. Klicka sedan på Generate new token. Ge ditt token ett namn och bocka för repo kryssrutan.
+Detta skapar ett token med korrekt OAuth scope och du kan nu klona repot genom att tex köra: git clone https://<token>@github.com/Addnode-Hackaton-2022/Team-3.git
+
 ### Första uppgifterna till teamet, deadline dag 1 kl 11:00. Svara direkt i denna readme i punkterna under.
 * Gå igenom pp Agenda.pptx
 * Gå varvet runt och presentera era enligt frågorna ovan.
