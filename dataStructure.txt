@@ -1,0 +1,36 @@
+Example WS pull:
+{"data":[1,5,3,135,20,0,0,0,0,0,0,0],"messagecmd":64,"messagetype":32,"size":12}
+
+const t = e.data[0] | e.data[1] << 8
+ , i = new y;
+return i.signalId = t,
+       i.valueTypeIdentifier = e.data[3] | e.data[4] << 8,
+       i.value = this._getValue(t, e.data, 5), i
+       
+            _getValue(e, t, i) {
+                const s = new Uint8Array(t)
+                  , n = new DataView(s.buffer);
+                let a = g.int32;
+                if (this.useChannelItems) {
+                    const t = this._nmeaSignalInfoMap.get(e);
+                    a = null != t ? t.dataType : g.int32
+                }
+                switch (a) {
+                case g.int8:
+                    return n.getInt8(i);
+                case g.uint8:
+                    return n.getUint8(i);
+                case g.int16:
+                    return n.getInt16(i, !0);
+                case g.uint16:
+                    return n.getUint16(i, !0);
+                case g.int32:
+                    return n.getInt32(i, !0);
+                case g.uint32:
+                    return n.getUint32(i, !0);
+                case g.int64:
+                    return new Number(n.getBigInt64(i, !0)).valueOf();
+                case g.uint64:
+                    return new Number(n.getBigUint64(i, !0)).valueOf()
+                }
+            }
