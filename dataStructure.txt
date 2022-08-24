@@ -34,3 +34,23 @@ return i.signalId = t,
                     return new Number(n.getBigUint64(i, !0)).valueOf()
                 }
             }
+
+
+
+
+
+Increase (read? write) alarm (incrementally)
+{"data":[2,0,0],"messagecmd":1,"messagetype":16,"size":3}
+{"data":[2,0,1],"messagecmd":1,"messagetype":16,"size":3}
+
+Decrease alarm, incrementally
+{"data":[3,0,0],"messagecmd":1,"messagetype":16,"size":3}
+{"data":[3,0,1],"messagecmd":1,"messagetype":16,"size":3}
+
+
+Set specific alarm
+{"messagetype":17,"messagecmd":3,"size":5,"data":[4,0,0,60,0]}
+
+(Rounds down to nearest 10 whatever is sent and sends back the rounded value to every client. \
+I.e. set to 66 -> 60 is set)
+
