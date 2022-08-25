@@ -46,9 +46,17 @@ app.post("/alarmthreshold", function (req, res) {
   const vehicleData = req.body;
   const vehicle = vehicles.find((vehicle) => vehicle.id === vehicleData.id);
   if (vehicle) {
-    axios.post(`http://${vehicle.requestUrl}/alarmthreshold`).then((res2) => {
-      res.send(vehicleData.threshold);
-    });
+    axios
+      .put(`http://${vehicle.requestUrl}/alarmthreshold`, {
+        threshold: vehicleData.threshold,
+      })
+      .then((res2) => {
+        res.send(vehicleData);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.next();
+      });
   }
 });
 
@@ -58,7 +66,7 @@ app.post("/resetalarm", function (req, res) {
   const vehicle = vehicles.find((vehicle) => vehicleData.id === vehicle.id);
   if (vehicle) {
     axios
-      .post(`http://${vehicle.requestUrl}/resetalarm`)
+      .put(`http://${vehicle.requestUrl}/resetalarm`)
       .then((res2) => {
         vehicle.resetAlarm = false;
         res.send(false);
