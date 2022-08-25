@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@section Scripts
+{
+    <script src='~/Scripts/Start.js' type='text/javascript'></script>
+}
+<div class="jumbotron" style="width: 100%; overflow: hidden;">
+    <!--<div id="map"></div>
+    <div
+        style="margin-left: 620px; height:100px">-->
+        <img id="alarm" width="50" height="50" class="alarmRed" src="~/Content/Icons/bell-ring.svg" />
+    <!--</div>
+    <div style="margin-left: 620px;">-->
+        <h2>Tank level %</h2>
+        <label style="font-size:x-large" id="tankLevelLabel">he</label>
+        <h2>Alarm level set</h2>
+        <input id="upButton" width="20" height="20" type="image" src="~/Content/Icons/arrow-circle-up.png" />
+        @*<button id="upButton">Up</button>*@
+        <label style="font-size:x-large" id="alarmLevelLabel"></label>
+        <input id="downButton" width="20" height="20" type="image" src="~/Content/Icons/arrow-circle-down.png" />
+        @*<button id="downButton">Down</button>*@
+    <!--</div>-->
+</div>
