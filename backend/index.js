@@ -41,32 +41,22 @@ app.post("/addvehicle", (req, res) => {
 });
 
 app.post("/alarmthreshold", function (req, res) {
-  const vehicle = JSON.parse(req.body);
-  console.log("/alarmthreshold", vehicle);
+  console.log("/alarmthreshold", req.body, typeof req.body);
+  const vehicleData = req.body;
+  const vehicle = vehicles.find((vehicle) => vehicle.id === vehicleData.id);
   axios.post(`http://${vehicle.requestUrl}/alarmthreshold`).then((res2) => {
-    res.send(vehicle.threshold);
+    res.send(vehicleData.threshold);
   });
 });
 
 app.post("/resetalarm", function (req, res) {
-  const vehicleId = req.body;
-  console.log("/resetalarm vehicleId:", vehicleId);
-  const vehicle = vehicles.find((vehicle) => vehicleId === id);
+  console.log("/resetalarm vehicleId:", req.body, typeof req.body);
+  const vehicleData = req.body;
+  const vehicle = vehicles.find((vehicle) => vehicleData.id === vehicle.id);
   if (vehicle) {
     axios.post(`http://${vehicle.requestUrl}/resetalarm`).then((res2) => {
       vehicle.resetAlarm = false;
       res.send(false);
-    });
-  }
-});
-
-app.post("/alarmthreshold", function (req, res) {
-  const newVehicleData = JSON.parse(req.body);
-  console.log("/alarmthreshold", newVehicleData);
-  const vehicle = vehicles.find((vehicle) => vehicle.id === id);
-  if (vehicle) {
-    axios.post(`http://${vehicle.requestUrl}/alarmthreshold`).then((res2) => {
-      res.send(newVehicleData.threshold);
     });
   }
 });
