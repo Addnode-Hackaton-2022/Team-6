@@ -1,0 +1,4 @@
+08:21:56 socket open
+08:22:09 socket open
+08:24:31 socket open
+08:24:32 Failed to registry

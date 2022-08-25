@@ -21,15 +21,26 @@ var requestedWduInfo = false;
 
 //log doesn't work correctly as it overwrites file on each log
 function log(msg) {
-  var d = new Date(),
-      content = d.toLocaleTimeString() + ' ' + msg;
-  
-  fs.writeFile('logs/log_' + d.toLocaleDateString('sv') + '.txt', content, err => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-  });
+    console.log(msg);
+    var d = new Date(),
+        content = d.toLocaleTimeString() + ' ' + msg;
+
+    if (fs.existsSync('logs/log_' + d.toLocaleDateString('sv') + '.txt')) {
+        fs.appendFile('logs/log_' + d.toLocaleDateString('sv') + '.txt', "\n"+ content, err => {
+            if (err) {
+                console.error("Error appending log: " + err);
+                return;
+            }
+        });
+    } else {
+        fs.writeFile('logs/log_' + d.toLocaleDateString('sv') + '.txt', content, err => {
+            if (err) {
+                console.error("Error writing log file: " + err);
+                return;
+            }
+        });
+    }
+
 }
 
 function calcFuelLevel(data) {
@@ -57,7 +68,7 @@ function requestWduInfo() {
 var connect = function() {
     ws = new WebSocket('ws://172.16.55.42/ws');
     ws.on('open', function() {
-        //log('socket open');
+        log('socket open');
         fetch("http://172.16.67.67:3001/addvehicle",
         {
             headers: {
@@ -67,17 +78,16 @@ var connect = function() {
             method: "POST",
             body: JSON.stringify({ id:vehicleId, pos: { lat: 59.3294, lon: 18.9520 }, fuelLevel: fuelLevel, alarm: alarm, threshold: threshold, requestUrl: requestUrl })
         })
-        .then(function(res){ console.log("Registred the vehicle") })
-        .catch(function(res){ console.log("Failed to registry") })
+        .then(function(res){ log("Registred the vehicle") })
+        .catch(function(res){ log("Failed to registry") })
     });
 
     ws.on('error', function() {
-        //log('error');
+        log('error');
     });
 
     ws.on('close', function() {
-        //log('socket close, reconnecting');
-        console.log('socket close, reconnecting...');
+        log('socket close, reconnecting...');
         setTimeout(connect, 100);
     });
     
