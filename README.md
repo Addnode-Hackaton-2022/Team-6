@@ -50,29 +50,42 @@ Här skall sista commiten till repot vara gjord och den muntliga presentationen 
 # Inskick, deadline dag två kl 12:30
 
 ### Övergripande beskrivning och val av utmaning
-<beskrivning här>
+Vi har gjort "Uppkopplad båt" genom att bygga en ett antal delsystem. Vi har dock valt att inte begränsa oss i lösningen till båtar utan betrakta alla former av fordon. 
 
 ### Team
 
 #### Namn på medlemmar 
-* <namn.>
-* <namn.>
-* <osv...>
+* Sandra Eliasson, Technia
+* Jonathan Ferm, Ida Infront
+* Kevin James, Sokigo
+* Rickard Lundberg, Symetri 
+* Henrik Norberg Stamford
+* Patrik Sjökvist, Sgroup
 
 #### Hur har ni jobbat inom teamet? Har alla gjort samma eller har ni haft olika roller?
-<beskrivning.>
+Vi bröt ner problemet i mindre delar och började först med att jobba i mindre grupper om 2personer. Senare blev det mer att vi jobbade gemensamt runt bordet och hjälptes åt där det behövdes.
 
 ### Teknik. Beskrivningen på eran teknikstack, språk och APIer ni har använt.
-<beskrivning.>
+node.js (både på raspberry och server), MVC med plain JS i klienterna
 
 ### Lösning, dessa frågor ska minst besvaras
  * Hur har ni löst utmaningen?
- * Hur långt har ni kommit?
- * Vad är nästa steg?
- * Några rekommendationer för framtiden?
- * Några insikter, begränsningar eller utmaningar ni stött på som är intressanta att dela med der av?
 
-<beskrivning.>
+ Vi har byggt en integrationslösning, vehicleIntegration som läser av informationen från Garmin och/eller andra sensorlösningar. Tanken är att integrationslösningen cachar all data tills det att den kan laddas upp och persisteras i FleetServer. Från Fleetserver kan hela flottans alla fordon betraktas och kommuniceras med genom FleetManager. Ombord kan även mobila inheter kommunicera direkt med vehicleIntegration genom dess API.
+ 
+ * Hur långt har ni kommit?
+ 
+ En fungerande lösning som visar på möjligheten men där vi tagit genvägar för att kunna visa på en helhet.
+ * Vad är nästa steg?
+ 
+Se till att data laddas undan i Fleet server så att man kan återbesöka olika insattser eller incidenter och spela upp dem efteråt för att kunna analysera eller utbilda sett till faktiska händelser och rörelser i flottan. Skriva en mer robust lösning generellt och lägga till authensiering/aktorisering. Konfigfil per båt för kanalerna.
+
+ * Några rekommendationer för framtiden?
+ 
+ Kör på, detta är inte något svårt utan mest bara att göra. Allt vore enklare om Garmin publicerade ett API så man inte behöver reverse enginera.
+ * Några insikter, begränsningar eller utmaningar ni stött på som är intressanta att dela med der av?
+ 
+ Tänk på problem som kan uppstå med bristande anslutning.
 
 
 # Mall för muntlig presentation, deadline dag två kl 12:30
