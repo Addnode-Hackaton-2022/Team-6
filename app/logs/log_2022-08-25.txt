@@ -116,3 +116,5 @@
 10:36:50 Failed to registry
 10:37:48 Failed to registry
 10:37:48 socket open
+12:11:35 socket open
+12:11:35 Failed to registry
