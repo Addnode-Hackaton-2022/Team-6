@@ -2,15 +2,20 @@
 button1.onclick = doUpButtonClick;
 var button2 = document.getElementById('downButton');
 button2.onclick = doDownButtonClick;
-getAlarmLevel();
+var alarmButton = document.getElementById('alarm');
+alarmButton.onclick = resetAlarm;
+//getAlarmLevel();
 getTankLevel();
 setInterval(updateMap, 1000);
-var map = L.map('map').setView([59.3294, 18.9000], 11);
+var map = L.map('map');
+map.setView([59.3294, 18.9000], 11);
+//map.on('click', hideInfoDiv);
+vehicles = [];
 getVehicles();
-vehicles = [
-    { id: 1, pos: { lat: 59.3294, lon: 18.9520 }, fuelLevel: 100, alarm: false, mapObject: null },
-    { id: 2, pos: { lat: 59.3494, lon: 18.8420 }, fuelLevel: 70, alarm: true, mapObject: null },
-    { id: 3, pos: { lat: 59.2884, lon: 18.8820 }, fuelLevel: 85, alarm: false, mapObject: null }
+[{ "id": 1, "pos": { "lat": 59.3294, "lon": 18.952 }, "fuelLevel": 100, "alarm": true, "threshold": 30, "requestUrl": "172.16.67.71:3000" }]
+cheatVehicles = [
+    { id: 2, pos: { lat: 59.3494, lon: 18.8420 }, fuelLevel: 70, alarm: true, "threshold": 25, "requestUrl": "172.16.67.71:3000" },
+    { id: 3, pos: { lat: 59.2884, lon: 18.8820 }, fuelLevel: 85, alarm: false, "threshold": 35, "requestUrl": "172.16.67.71:3000" }
 ]
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -18,7 +23,27 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 vehicles.forEach(vehicle => createVehicleMarker(vehicle));
 
+function resetAlarm() {
+    $.ajax({
+        url: "http://172.16.67.67:3001/resetalarm",
+        crossDomain: true,
+        contentType: "application/json",
+        dataType: "json",
+        type: "POST",
+        data: JSON.stringify( { "id": 1 }),
+        success: function (result) {
+        }
+    });
+}
+
+function hideInfoDiv(e) {
+    var infoDiv = document.getElementById('infoDiv');
+    infoDiv.style.visibility = 'hidden';
+
+}
 function updateMap() {
+    getVehicles();
+    if (vehicles.length === 0) return;
     vehicles[0].pos.lon += 0.0005;
     vehicles.forEach(vehicle => {
         var color = vehicle.alarm ? 'red' : 'green';
@@ -40,29 +65,60 @@ function createVehicleMarker(data) {
     data.mapObject.addTo(map).on('click', onVehicleClick);
     data.mapObject.fuelLevel = data.fuelLevel;
     data.mapObject.alarm = data.alarm;
+    data.mapObject.id = data.id;
+    data.mapObject.threshold = data.threshold;
+    return data;
+}
+function updateVehicleInfo(marker) {
+    //alert(this.fuelLevel);
+    //  setSelectedVehicle(this.id);
+    var label = document.getElementById('tankLevelLabel')
+    label.innerHTML = marker.fuelLevel;
+    var className = marker.alarm ? 'alarmRed' : 'alarmGreen';
+    var alarm = document.getElementById('alarm');
+    alarm.className = className;
+    var infoDiv = document.getElementById('infoDiv');
+    infoDiv.dataset.boatid = marker.id;
+    infoDiv.style.visibility = 'visible';
+    var label = document.getElementById('alarmLevelLabel')
+    label.innerHTML = marker.threshold;
 }
 function getVehicles() {
     $.ajax({
         url: "http://172.16.67.67:3001/vehicles",
+        crossDomain: true,
+        //dataType: 'jsonp',
         type: "GET",
         success: function (result) {
-            alert(result);
+            result.concat(cheatVehicles);
+            vehicles = result.map(r => {
+                var v = vehicles.find(v => v.id === r.id);
+                if (v) {
+                    var data = { ...v, ...r };
+                    data.mapObject.fuelLevel = r.fuelLevel;
+                    data.mapObject.alarm = r.alarm;
+                    data.mapObject.threshold = r.threshold;
+                    return data;
+                }
+                else
+                    return createVehicleMarker(r);
+            });
         }
-    });
-
+    }
+    );
+    var infoDiv = document.getElementById('infoDiv');
+    var selectedBoat = infoDiv.dataset.boatid;
+    var vehicle = vehicles.find(v => v.id == selectedBoat);
+    if (vehicle) {
+        updateVehicleInfo(vehicle.mapObject);
+    }
 }
 function onVehicleClick(e) {
-    //alert(this.fuelLevel);
-  //  setSelectedVehicle(this.id);
-    var label = document.getElementById('tankLevelLabel')
-    label.innerHTML = this.fuelLevel;
-    var className = this.alarm ? 'alarmRed' : 'alarmGreen';
-    var alarm = document.getElementById('alarm');
-    alarm.className = className;
+    updateVehicleInfo(this);
 }
 function getTankLevel() {
     $.ajax({
-        url: "https://localhost:44319/api/MainApi/GetTankLevel",
+        url: "http://localhost:60670/api/MainApi/GetTankLevel",
         type: "GET",
         success: function (result) {
             var label = document.getElementById('tankLevelLabel');
@@ -72,7 +128,7 @@ function getTankLevel() {
 }
 function getAlarmLevel() {
     $.ajax({
-        url: "https://localhost:44319/api/MainApi/GetAlarmLevel",
+        url: "http://172.16.67.67:3001/alarmthreshold",
         type: "GET",
         success: function (result) {
             var label = document.getElementById('alarmLevelLabel')
@@ -81,22 +137,42 @@ function getAlarmLevel() {
     });
 }
 function doUpButtonClick() {
+    var currentLevel = parseInt(document.getElementById('alarmLevelLabel').innerHTML);
+    if(currentLevel < 100)
+        currentLevel = currentLevel + 10;;
     $.ajax({
-        url: "https://localhost:44319/api/MainApi/LevelUp",
+        url: "http://172.16.67.67:3001/alarmthreshold",
+        crossDomain: true,
         type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+            "id": 1,
+            "threshold": currentLevel
+        }),
         success: function (result) {
             var label = document.getElementById('alarmLevelLabel')
-            label.innerHTML = result;
+            label.innerHTML = currentLevel;
         }
     });
 }
 function doDownButtonClick() {
+    var currentLevel = parseInt(document.getElementById('alarmLevelLabel').innerHTML);
+    if (currentLevel > 0)
+        currentLevel = currentLevel - 10;
     $.ajax({
-        url: "https://localhost:44319/api/MainApi/LevelDown",
+        url: "http://172.16.67.67:3001/alarmthreshold",
+        crossDomain: true,
         type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+            "id": 1,
+            "threshold": currentLevel
+        }),
         success: function (result) {
             var label = document.getElementById('alarmLevelLabel')
-            label.innerHTML = result;
+            label.innerHTML = currentLevel;
         }
     });
 }
