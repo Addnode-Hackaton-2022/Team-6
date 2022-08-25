@@ -1,0 +1,40 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+#map { height:400px; width:600px; float:left}
+
+/*.svg-icon.alarm, #alarm {
+    height: 50px;
+    width: 50px;
+    filter: invert(42%) sepia(92%) hue-rotate(45deg) saturate(1352%);
+    mask-image: url("~/Content/Icons/bell-ring.svg");
+}
+*/
+.alarmRed {
+    filter: invert(19%) sepia(50%) saturate(7462%) hue-rotate(355deg) brightness(106%) contrast(131%);
+}
+.alarmGreen {
+    filter: invert(67%) sepia(48%) saturate(5848%) hue-rotate(82deg) brightness(117%) contrast(125%);
+}

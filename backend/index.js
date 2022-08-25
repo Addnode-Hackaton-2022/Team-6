@@ -4,6 +4,7 @@ const app = express();
 app.use(express.json());
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "*");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
@@ -44,9 +45,19 @@ app.post("/alarmthreshold", function (req, res) {
   console.log("/alarmthreshold", req.body, typeof req.body);
   const vehicleData = req.body;
   const vehicle = vehicles.find((vehicle) => vehicle.id === vehicleData.id);
-  axios.post(`http://${vehicle.requestUrl}/alarmthreshold`).then((res2) => {
-    res.send(vehicleData.threshold);
-  });
+  if (vehicle) {
+    axios
+      .put(`http://${vehicle.requestUrl}/alarmthreshold`, {
+        threshold: vehicleData.threshold,
+      })
+      .then((res2) => {
+        res.send(vehicleData);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.next();
+      });
+  }
 });
 
 app.post("/resetalarm", function (req, res) {
@@ -54,10 +65,15 @@ app.post("/resetalarm", function (req, res) {
   const vehicleData = req.body;
   const vehicle = vehicles.find((vehicle) => vehicleData.id === vehicle.id);
   if (vehicle) {
-    axios.post(`http://${vehicle.requestUrl}/resetalarm`).then((res2) => {
-      vehicle.resetAlarm = false;
-      res.send(false);
-    });
+    axios
+      .put(`http://${vehicle.requestUrl}/resetalarm`)
+      .then((res2) => {
+        vehicle.resetAlarm = false;
+        res.send(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 });
 

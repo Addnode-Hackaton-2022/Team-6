@@ -8,6 +8,7 @@ const res = require('express/lib/response');
 app.use(express.json());
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "PUT");
     res.header(
       "Access-Control-Allow-Headers",
       "Origin, X-Requested-With, Content-Type, Accept"
@@ -55,7 +56,7 @@ function calcFuelLevel(data) {
     if (level > 100) {
         level = 100;
     }
-    
+   
     return level;
 }
 
@@ -67,16 +68,18 @@ function isSignalValue(data) {
     return data[1] === 5 && data[2] === 3;
 }
 
+function setup() {
+    ws.send(JSON.stringify({"messagetype":96,"messagecmd":0,"size":14,"data":[6,0,1,0,2,0,3,0,4,0,5,0,6,0]}));    
+    ws.send(JSON.stringify({"messagetype":96,"messagecmd":1,"size":2,"data":[0,0]}));
+   
+    setTimeout(() => {
+        requestWduInfo();
+    }, 100);
+}
+
 function requestWduInfo() {
     requestedWduInfo = true;
-    ws.send(JSON.stringify({"messagetype":96,"messagecmd":0,"size":14,"data":[6,0,1,0,2,0,3,0,4,0,5,0,6,0]}));	
-    ws.send(JSON.stringify({"messagetype":96,"messagecmd":1,"size":2,"data":[0,0]}));
-
-    setTimeout(() => {
-        ws.send(JSON.stringify({messagetype: 49, messagecmd: 1, size: 3, data: [0, 0, 0]}));
-        ws.send(JSON.stringify({messagetype: 49, messagecmd: 1, size: 3, data: [0, 0, 0]}));
-    }, 100);
-
+    ws.send(JSON.stringify({messagetype: 49, messagecmd: 1, size: 3, data: [0, 0, 0]}));
 }
 
 var connect = function() {
@@ -92,8 +95,10 @@ var connect = function() {
             method: "POST",
             body: JSON.stringify({ id:vehicleId, pos: { lat: 59.3294, lon: 18.9520 }, fuelLevel: fuelLevel, alarm: alarm, threshold: threshold, requestUrl: requestUrl })
         })
-        .then(function(res){ log("Registred the vehicle"); requestWduInfo(); })
+        .then(function(res){ log("Registred the vehicle"); setup(); })
         .catch(function(res){ log("Failed to registry"); });
+       
+        setup();
     });
 
     ws.on('error', function() {
@@ -104,7 +109,7 @@ var connect = function() {
         log('socket close, reconnecting...');
         setTimeout(connect, 100);
     });
-    
+   
     ws.on('message', function(msg){
         var json = JSON.parse(msg),
         data = json.data;
@@ -112,8 +117,8 @@ var connect = function() {
         // Heartbeat
         if (json.messagetype == 48 && json.size == 0) {
             ws.send(JSON.stringify({messagetype: 128, messagecmd: 0, size: 1, data: [0]}));
+            requestWduInfo();
         }
-
         // Fuel level
         else if (data[0] == 1 && isSignalValue(data)) {
             fuelLevel = calcFuelLevel(data);
@@ -152,10 +157,10 @@ app.get('/vehicledata', function(req, res) {
 });
 
 app.put('/alarmthreshold', function(req, res) {
-    var json = JSON.parse(req.body);
-    
-    if (json.threshold && json.threshold >= 0 && json.threshold <= 100) {
-        threshold = json.threshold;
+    console.log(req.body, typeof req.body, req.body.threshold);
+       
+    if (req.body.threshold && req.body.threshold >= 0 && req.body.threshold<= 100) {
+        threshold = req.body.threshold;
         ws.send(JSON.stringify({messagetype: 17, messagecmd: 3, size: 5, data: [4, 0, 0, threshold, 0]}));
     }
 });
