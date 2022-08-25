@@ -2,3 +2,117 @@
 08:22:09 socket open
 08:24:31 socket open
 08:24:32 Failed to registry
+10:07:53 socket open
+10:07:53 Failed to registry
+10:09:09 socket open
+10:09:09 Failed to registry
+10:10:17 socket open
+10:10:17 Failed to registry
+10:13:16 socket open
+10:13:16 Failed to registry
+10:13:27 socket close, reconnecting...
+10:13:27 socket open
+10:13:27 Failed to registry
+10:13:36 socket close, reconnecting...
+10:13:36 socket open
+10:13:36 Failed to registry
+10:13:56 socket open
+10:13:56 Failed to registry
+10:14:45 socket open
+10:14:45 Failed to registry
+10:15:58 socket open
+10:15:58 Failed to registry
+10:16:17 socket close, reconnecting...
+10:16:18 socket open
+10:16:18 Failed to registry
+10:17:09 socket close, reconnecting...
+10:17:09 socket open
+10:17:09 Failed to registry
+10:17:29 socket close, reconnecting...
+10:17:29 socket open
+10:17:29 Failed to registry
+10:17:58 socket close, reconnecting...
+10:17:58 socket open
+10:17:58 Failed to registry
+10:18:30 socket close, reconnecting...
+10:18:30 socket open
+10:18:30 Failed to registry
+10:18:55 socket close, reconnecting...
+10:18:56 socket open
+10:18:56 Failed to registry
+10:19:01 socket close, reconnecting...
+10:19:02 socket open
+10:19:02 Failed to registry
+10:19:16 socket close, reconnecting...
+10:19:18 socket open
+10:19:18 Failed to registry
+10:19:38 socket close, reconnecting...
+10:19:38 socket open
+10:19:38 Failed to registry
+10:19:43 socket close, reconnecting...
+10:19:48 socket open
+10:19:48 Failed to registry
+10:20:09 socket close, reconnecting...
+10:20:09 socket open
+10:20:09 Failed to registry
+10:20:38 socket close, reconnecting...
+10:20:38 socket open
+10:20:38 Failed to registry
+10:21:10 socket close, reconnecting...
+10:21:10 socket open
+10:21:10 Failed to registry
+10:21:58 socket close, reconnecting...
+10:21:59 socket open
+10:21:59 Failed to registry
+10:22:11 socket close, reconnecting...
+10:22:12 socket open
+10:22:12 Failed to registry
+10:22:32 socket close, reconnecting...
+10:22:32 socket open
+10:22:32 Failed to registry
+10:22:45 socket close, reconnecting...
+10:22:45 socket open
+10:22:45 Failed to registry
+10:22:54 socket close, reconnecting...
+10:23:01 socket open
+10:23:01 Failed to registry
+10:23:31 socket close, reconnecting...
+10:23:31 socket open
+10:23:31 Failed to registry
+10:24:16 socket close, reconnecting...
+10:24:16 socket open
+10:24:16 Failed to registry
+10:25:05 socket close, reconnecting...
+10:25:05 socket open
+10:25:05 Failed to registry
+10:25:48 socket close, reconnecting...
+10:25:48 socket open
+10:25:48 Failed to registry
+10:26:30 Failed to registry
+10:26:30 socket open
+10:27:45 error
+10:27:45 socket close, reconnecting...
+10:27:53 socket open
+10:27:53 Failed to registry
+10:30:26 socket open
+10:30:26 Failed to registry
+10:31:46 socket open
+10:31:46 Failed to registry
+10:32:36 socket open
+10:32:36 Failed to registry
+10:33:57 socket open
+10:33:57 Failed to registry
+10:34:22 socket open
+10:34:22 Failed to registry
+10:34:41 socket open
+10:34:41 Failed to registry
+10:35:17 socket close, reconnecting...
+10:35:18 socket open
+10:35:18 Failed to registry
+10:35:33 socket open
+10:35:33 Failed to registry
+10:36:50 socket close, reconnecting...
+10:36:50 socket open
+10:36:50 Failed to registry
+10:37:48 Failed to registry
+10:37:48 socket open
