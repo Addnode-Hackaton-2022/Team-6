@@ -6,6 +6,14 @@ const express = require('express');
 const app = express();
 const res = require('express/lib/response');
 app.use(express.json());
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    next();
+  });
 
 const fs = require('fs');
 
@@ -19,7 +27,6 @@ var alarm;
 // Behövs eftersom vi inte alltid får rätt data för threshold
 var requestedWduInfo = false;
 
-//log doesn't work correctly as it overwrites file on each log
 function log(msg) {
     console.log(msg);
     var d = new Date(),
@@ -62,7 +69,14 @@ function isSignalValue(data) {
 
 function requestWduInfo() {
     requestedWduInfo = true;
-    ws.send(JSON.stringify({messagetype: 49, messagecmd: 1, size: 3, data: [0, 0, 0]}));
+    ws.send(JSON.stringify({"messagetype":96,"messagecmd":0,"size":14,"data":[6,0,1,0,2,0,3,0,4,0,5,0,6,0]}));	
+    ws.send(JSON.stringify({"messagetype":96,"messagecmd":1,"size":2,"data":[0,0]}));
+
+    setTimeout(() => {
+        ws.send(JSON.stringify({messagetype: 49, messagecmd: 1, size: 3, data: [0, 0, 0]}));
+        ws.send(JSON.stringify({messagetype: 49, messagecmd: 1, size: 3, data: [0, 0, 0]}));
+    }, 100);
+
 }
 
 var connect = function() {
@@ -78,8 +92,8 @@ var connect = function() {
             method: "POST",
             body: JSON.stringify({ id:vehicleId, pos: { lat: 59.3294, lon: 18.9520 }, fuelLevel: fuelLevel, alarm: alarm, threshold: threshold, requestUrl: requestUrl })
         })
-        .then(function(res){ log("Registred the vehicle") })
-        .catch(function(res){ log("Failed to registry") })
+        .then(function(res){ log("Registred the vehicle"); requestWduInfo(); })
+        .catch(function(res){ log("Failed to registry"); });
     });
 
     ws.on('error', function() {
@@ -94,22 +108,23 @@ var connect = function() {
     ws.on('message', function(msg){
         var json = JSON.parse(msg),
         data = json.data;
-        
+
         // Heartbeat
         if (json.messagetype == 48 && json.size == 0) {
             ws.send(JSON.stringify({messagetype: 128, messagecmd: 0, size: 1, data: [0]}));
         }
+
         // Fuel level
         else if (data[0] == 1 && isSignalValue(data)) {
             fuelLevel = calcFuelLevel(data);
         }
         // requestWduInfo
-        else if (requestedWduInfo && data[0] == 5 && json.messagetype == 5) {
+        else if (requestedWduInfo && data[0] == 5 && json.messagecmd == 5) {
             requestedWduInfo = false;
             threshold = calcThreshold(data);
         }
         // Alarm
-        else if (data[0] == 1) {
+        else if (data[0] == 6) {
             alarm = data[2] == 1;
         }
     });
@@ -137,22 +152,17 @@ app.get('/vehicledata', function(req, res) {
 });
 
 app.put('/alarmthreshold', function(req, res) {
-    var json = JSON.parse(req.body),
-        success = false;
+    var json = JSON.parse(req.body);
     
     if (json.threshold && json.threshold >= 0 && json.threshold <= 100) {
         threshold = json.threshold;
         ws.send(JSON.stringify({messagetype: 17, messagecmd: 3, size: 5, data: [4, 0, 0, threshold, 0]}));
-        success = true;
     }
-    
-    res.send(JSON.stringify({'success': success}));
 });
 
 app.put('/resetalarm', function(req, res) {
     alarm = false;
     ws.send(JSON.stringify({messagetype: 17, messagecmd: 1, size: 3, data: [6, 0, 1]}));
-    res.send(JSON.stringify({'success': true}));
 });
 
 
